@@ -26,6 +26,6 @@ def quicksort(array, &prc)
   less_array = quicksort(less_array, &prc)
   more_array = quicksort(more_array, &prc)
   # depending on the size of the less and more array Big-O can range from O(log(n)) to O(n^2) can be optimized by selecting different pivots
-  #this particular implemntation uses a memory complexity of O(n!)
+  #this particular implemntation uses a worst case memory complexity of O(n) but realisitically O(log(n)) b/c each recursive call is not of equal size
   return less_array + [pivot] + more_array
 end
