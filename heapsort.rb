@@ -3,7 +3,8 @@ def heapsort(array, &prc)
   #build a reverse heap
   heapify!(array, &prc)
   # this is the actual sort
-  unheapify!
+  unheapify!(array, &prc)
+  array
 end
 
 
@@ -14,6 +15,7 @@ def heapify!(array, &prc)
   end
 end
 
+# O(log(n))
 def heapify_up!(array, idx, &prc)
   parent_idx = parent_idx(idx)
   return true if parent_idx == nil
@@ -22,7 +24,39 @@ def heapify_up!(array, idx, &prc)
     idx = parent_idx
     heapify_up!(array, idx, &prc)
   end
-  idx
+  array
+end
+
+def unheapify!(array, &prc)
+  array_length = array.length
+  while array_length > 0
+    array_length -=1
+    array[0], array[array_length] = array[array_length], array[0]
+    heapify_down!(array, 0, array_length, &prc)
+  end
+end
+
+# O(log(n))
+def heapify_down!(array, idx, array_length, &prc)
+  array_length ||= array.length
+  children_idxs = child_idxs(idx, array_length)
+  if children_idxs.length == 0
+    return array
+  elsif children_idxs.length == 1
+    child_idx = children_idxs[0]
+  else
+    if prc.call(array[children_idxs[0]], array[children_idxs[1]]) == 1
+      child_idx = children_idxs[0]
+    else
+      child_idx = children_idxs[1]
+    end
+  end
+  if prc.call(array[idx], array[child_idx]) == -1
+    array[idx], array[child_idx] = array[child_idx], array[idx]
+    idx = child_idx
+    heapify_down!(array, idx, array_length, &prc)
+  end
+  array
 end
 
 def parent_idx(idx)
